@@ -44,11 +44,7 @@ export default function HomePage() {
 					/>
 					<div className="absolute inset-0 z-10" />
 				</AspectRatio>
-				{/* <p className="text-sm text-muted-foreground mt-2 text-right">
-          ^ average windows experience &#128557;&#128591;
-        </p> */}
 			</div>
-			
 		</div>
 	);
 }
