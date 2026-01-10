@@ -3,7 +3,7 @@
 	"author": "SaviruFr",
 	"homepage": "https://better-themes.netlify.app",
 	"devDependencies": {
-		"@biomejs/biome": "2.3.10",
+		"@biomejs/biome": "2.3.11",
 		"turbo": "^2.7.3"
 	},
 	"license": "MIT",
