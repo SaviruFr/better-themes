@@ -32,7 +32,7 @@ jobs:
 
       - name: Publish to npm
         run: |
-          cd packages/better-themes
+          cd better-themes
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
