@@ -1,0 +1,11 @@
+[build]
+  command = "pnpm --filter better-themes build && pnpm --filter web build"
+  publish = "web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[dev]
+  command = "pnpm run dev"
+  port = 3000
+

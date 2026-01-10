@@ -1,0 +1,139 @@
+---
+title: Waku
+description: Setup guide for Waku
+icon: Sparkles
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Update your root layout
+
+In `pages/_layout.tsx`, wrap your app with `ThemeProvider`:
+
+```tsx title="pages/_layout.tsx"
+import { ThemeProvider } from "better-themes/rsc";
+import type { ReactNode } from "react";
+
+type RootLayoutProps = { children: ReactNode };
+
+export default async function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Your head content */}
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+**Note:** Waku uses React Server Components, so use the `/rsc` export.
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+```tsx title="components/theme-switcher.tsx"
+"use client";
+
+import { useTheme } from "better-themes/rsc";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Complete Example
+
+```tsx title="pages/_layout.tsx"
+import { ThemeProvider } from "better-themes/rsc";
+import type { ReactNode } from "react";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
+type RootLayoutProps = { children: ReactNode };
+
+export default async function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="description" content="My Waku app" />
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeSwitcher />
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+## Notes
+
+- Use `better-themes/rsc` for Waku (React Server Components)
+- Add `suppressHydrationWarning` to the `<html>` tag
+
+
+## Example
+
+View a complete example implementation: [Waku Example](https://github.com/SaviruFr/better-themes/tree/main/examples/waku)
+
+View the live example: [Live Demo](https://waku-better-themes.netlify.app/)
+

@@ -1,0 +1,98 @@
+---
+title: Getting Started
+description: A theme provider for React
+icon: Rocket
+---
+
+Better Themes is a framework-agnostic theming solution for React applications. It provides seamless dark mode support with zero flash on load, system preference detection, and cross-tab synchronization.
+
+![Better Themes Preview](/og-image.png)
+
+## Features
+
+- **Zero flash on load** - Prevents theme flash during page load (SSR/SSG safe)
+- **System preference detection** - Automatically detects and respects user's system theme preference via `prefers-color-scheme`
+- **Cross-tab synchronization** - Theme changes sync across browser tabs and windows
+- **Themed browser UI** - Sets `color-scheme` CSS property for native browser UI elements
+- **Custom themes** - Support for multiple custom themes beyond light/dark
+- **Flexible styling** - Use class or data attributes (works with Tailwind CSS)
+- **TypeScript** - Fully typed with TypeScript
+- **Framework agnostic** - Works with Next.js, Remix, Vite, TanStack Start, Waku, and more
+
+## Quick Start
+
+Install better-themes:
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+Wrap your app with `ThemeProvider`:
+
+```tsx title="layout.tsx"
+import { ThemeProvider } from "better-themes";
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+Use the theme in your components:
+
+```tsx title="theme-switcher.tsx"
+import { useTheme } from "better-themes";
+
+function theme-switcher() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+
+This project is deployed on Netlify
+
+<a target="_blank" href="https://www.netlify.com?utm_source=savirufr/better-themes">
+  <img src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg" alt="Deploys by Netlify" />
+</a>
+
+## Next Steps
+
+<Cards>
+  <Card title="Installation" href="/docs/installation" description="Learn how to install better-themes in your project" />
+  <Card title="Quick Start" href="/docs/quick-start" description="Get up and running in minutes" />
+  <Card title="API Reference" href="/docs/api" description="Complete API documentation" />
+  <Card title="Framework Guides" href="/docs/frameworks/next-app" description="Framework-specific setup guides" />
+</Cards>

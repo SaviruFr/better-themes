@@ -1,0 +1,123 @@
+---
+title: Quick Start
+description: Get started with better-themes in minutes
+icon: Zap
+---
+
+## Basic Setup
+
+<Steps>
+<Step>
+### Wrap your app with `ThemeProvider`
+
+The `ThemeProvider` component should be placed at the root of your application:
+
+```tsx title="layout.tsx"
+import { ThemeProvider } from "better-themes";
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+</Step>
+
+<Step>
+### Add `suppressHydrationWarning` to your `<html>` tag
+
+This prevents hydration warnings when the theme is applied:
+
+```tsx title="layout.tsx"
+<html lang="en" suppressHydrationWarning>
+  <body>
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  </body>
+</html>
+```
+</Step>
+
+<Step>
+### Style your app
+
+By default, `ThemeProvider` sets a `class` attribute on the `<html>` element. Style your app with CSS:
+
+```css title="global.css"
+:root {
+  --background: white;
+  --foreground: black;
+}
+
+.dark {
+  --background: black;
+  --foreground: white;
+}
+```
+
+Or use hard-coded values:
+
+```css title="global.css"
+html,
+body {
+  color: #000;
+  background: #fff;
+}
+
+.dark,
+.dark body {
+  color: #fff;
+  background: #000;
+}
+```
+</Step>
+</Steps>
+
+## Using the Theme
+
+Access the current theme and change it with the `useTheme` hook:
+
+```tsx title="theme-switcher.tsx"
+import { useTheme } from "better-themes";
+
+function theme-switcher() {
+  const { theme, setTheme, themes } = useTheme();
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+      <button onClick={() => setTheme("light")}>Light</button>
+      <button onClick={() => setTheme("dark")}>Dark</button>
+      <button onClick={() => setTheme("system")}>System</button>
+    </div>
+  );
+}
+```
+
+## Tailwind CSS
+
+For Tailwind CSS, use class-based dark mode:
+
+```tsx title="layout.tsx"
+<ThemeProvider attribute="class">
+  {children}
+</ThemeProvider>
+```
+
+Then use Tailwind's dark mode classes:
+
+```tsx title="page.tsx"
+<h1 className="text-black dark:text-white">
+  Hello
+</h1>
+```
+
+## Important Notes
+
+- The theme value is `undefined` on the server. Only use it after the component mounts on the client.
+- See the [SSR Guide](/docs/ssr) for details on handling server-side rendering.
+- Check out [Framework Guides](/docs/frameworks/next-app) for framework-specific setup instructions.
+

@@ -1,0 +1,3 @@
+[build]
+  command = "pnpm --filter better-themes build && pnpm --filter remix build"
+  publish = "examples/remix/build/client"

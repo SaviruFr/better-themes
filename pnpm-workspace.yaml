@@ -1,0 +1,4 @@
+packages:
+  - better-themes
+  - web
+  - examples/*

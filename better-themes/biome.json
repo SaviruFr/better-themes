@@ -1,0 +1,13 @@
+{
+  "root": false,
+  "extends": "//",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**/src/**/*", "!dist/**/*", "!node_modules/**/*"]
+  }
+}

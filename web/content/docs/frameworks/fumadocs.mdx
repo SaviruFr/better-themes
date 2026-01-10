@@ -1,0 +1,241 @@
+---
+title: Fumadocs
+description: Setup guide for Fumadocs
+icon: BookOpen
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Update your root layout
+
+In `app/layout.tsx`, wrap your app with `ThemeProvider` and disable Fumadocs' built-in theme:
+
+```tsx title="app/layout.tsx"
+import { RootProvider } from "fumadocs-ui/provider/next";
+import { ThemeProvider } from "better-themes/rsc";
+import type { ReactNode } from "react";
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <RootProvider theme={{ enabled: false }}>{children}</RootProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+**Important:** 
+- Use the `/rsc` export for Fumadocs (Next.js App Router)
+- Set `theme={{ enabled: false }}` on `RootProvider` to disable Fumadocs' built-in theme system
+- Add `suppressHydrationWarning` to your `<html>` tag
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+Create a client component for theme switching:
+
+```tsx title="components/theme-switcher.tsx"
+"use client";
+
+import { useTheme } from "better-themes/rsc";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+
+<Step>
+### Add theme switcher to layouts
+
+Add the theme switcher to both `HomeLayout` and `DocsLayout`:
+
+**Home Layout** (`app/(home)/layout.tsx`):
+
+```tsx title="app/(home)/layout.tsx"
+import { HomeLayout } from "fumadocs-ui/layouts/home";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import type { ReactNode } from "react";
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return (
+    <HomeLayout themeSwitch={{ component: <ThemeSwitcher /> }}>
+      {children}
+    </HomeLayout>
+  );
+}
+```
+
+**Docs Layout** (`app/docs/layout.tsx`):
+
+```tsx title="app/docs/layout.tsx"
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { source } from "@/lib/source";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import type { ReactNode } from "react";
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return (
+    <DocsLayout 
+      themeSwitch={{ component: <ThemeSwitcher /> }} 
+      tree={source.pageTree}
+    >
+      {children}
+    </DocsLayout>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Complete Example
+
+```tsx title="app/layout.tsx"
+import { RootProvider } from "fumadocs-ui/provider/next";
+import { ThemeProvider } from "better-themes/rsc";
+
+export default function Layout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <RootProvider theme={{ enabled: false }}>{children}</RootProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx title="app/(home)/layout.tsx"
+import { HomeLayout } from "fumadocs-ui/layouts/home";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
+export default function Layout({ children }: LayoutProps<"/">) {
+  return (
+    <HomeLayout themeSwitch={{ component: <ThemeSwitcher /> }}>
+      {children}
+    </HomeLayout>
+  );
+}
+```
+
+```tsx title="app/docs/layout.tsx"
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { source } from "@/lib/source";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
+export default function Layout({ children }: LayoutProps<"/docs">) {
+  return (
+    <DocsLayout 
+      themeSwitch={{ component: <ThemeSwitcher /> }} 
+      tree={source.pageTree}
+    >
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+```tsx title="components/theme-switcher.tsx"
+"use client";
+
+import { useTheme } from "better-themes/rsc";
+import { useEffect, useState } from "react";
+import { Monitor, Moon, Sun } from "lucide-react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <div>
+      <button onClick={() => setTheme("light")}>
+        <Sun />
+      </button>
+      <button onClick={() => setTheme("dark")}>
+        <Moon />
+      </button>
+      <button onClick={() => setTheme("system")}>
+        <Monitor />
+      </button>
+    </div>
+  );
+}
+```
+
+## Notes
+
+- Always use `better-themes/rsc` for Fumadocs (Next.js App Router)
+- Disable Fumadocs' built-in theme by setting `theme={{ enabled: false }}` on `RootProvider`
+- Remember to add `suppressHydrationWarning` to the `<html>` tag
+- The theme switcher can be integrated into both `HomeLayout` and `DocsLayout` using the `themeSwitch` prop
+
+## Example
+
+View a complete example implementation: [Fumadocs Example](https://github.com/SaviruFr/better-themes/tree/main/examples/fumadocs)
+
+View the live example: [Live Demo](https://fumadocs-better-themes.netlify.app/)
+

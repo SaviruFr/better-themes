@@ -1,0 +1,189 @@
+---
+title: Advanced Usage
+description: Advanced configuration and usage patterns
+icon: Settings
+---
+
+## Custom Themes
+
+You can define custom themes beyond light and dark:
+
+```tsx
+<ThemeProvider themes={["light", "dark", "purple", "blue", "green"]}>
+  {children}
+</ThemeProvider>
+```
+
+Use the `value` prop to map theme names to different attribute values:
+
+```tsx
+<ThemeProvider
+  themes={["light", "dark", "purple"]}
+  value={{
+    light: "light-mode",
+    dark: "dark-mode",
+    purple: "purple-mode"
+  }}
+  attribute="data-theme"
+>
+  {children}
+</ThemeProvider>
+```
+
+## Multiple Attributes
+
+You can apply themes to multiple attributes simultaneously:
+
+```tsx
+<ThemeProvider attribute={["class", "data-theme"]}>
+  {children}
+</ThemeProvider>
+```
+
+This is useful when you need both class-based styling (for Tailwind) and data attributes (for custom CSS).
+
+## Forced Themes
+
+Force a specific theme for a page or section:
+
+```tsx
+<ThemeProvider forcedTheme="dark">
+  {children}
+</ThemeProvider>
+```
+
+When `forcedTheme` is set, it overrides user preferences and localStorage. This is useful for:
+- Landing pages that should always be light
+- Documentation sections that should always be dark
+- A/B testing different themes
+
+## Disable System Theme
+
+Disable system theme detection:
+
+```tsx
+<ThemeProvider enableSystem={false} defaultTheme="light">
+  {children}
+</ThemeProvider>
+```
+
+When `enableSystem` is false, the `"system"` option is removed from available themes.
+
+## Custom Storage Key
+
+Change the localStorage key used to store theme preferences:
+
+```tsx
+<ThemeProvider storageKey="my-app-theme">
+  {children}
+</ThemeProvider>
+```
+
+Useful when you have multiple theme providers in the same app or want to avoid conflicts with other libraries.
+
+## Disable Color Scheme
+
+Disable the `color-scheme` CSS property:
+
+```tsx
+<ThemeProvider enableColorScheme={false}>
+  {children}
+</ThemeProvider>
+```
+
+The `color-scheme` property tells browsers which color scheme to use for native UI elements. You might want to disable it if you're handling this manually.
+
+## Disable Transitions
+
+Disable CSS transitions when switching themes:
+
+```tsx
+<ThemeProvider disableTransitionOnChange>
+  {children}
+</ThemeProvider>
+```
+
+This prevents flashy transitions when themes change. Better Themes temporarily disables all transitions, applies the theme, then re-enables them.
+
+## Content Security Policy (CSP)
+
+If you're using CSP headers, provide a nonce for the inline script:
+
+```tsx
+<ThemeProvider nonce="your-nonce-here">
+  {children}
+</ThemeProvider>
+```
+
+The nonce is passed to the inline script that prevents flash on load.
+
+## Programmatic Theme Control
+
+Control themes programmatically:
+
+```tsx twoslash
+import { useTheme } from "better-themes";
+
+// ---cut---
+function MyComponent() {
+  const { theme, setTheme, themes, systemTheme } = useTheme();
+
+  // Set theme directly
+  setTheme("dark");
+
+  // Set theme with callback
+  setTheme((current) => current === "dark" ? "light" : "dark");
+
+  // Access all available themes
+  console.log(themes); // ["light", "dark", "system"]
+
+  // Access system preference
+  console.log(systemTheme); // "dark" or "light"
+}
+```
+
+## Conditional Rendering
+
+Safely render theme-dependent content:
+
+```tsx
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+function ThemedContent() {
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      {theme === "dark" && <DarkContent />}
+      {theme === "light" && <LightContent />}
+    </div>
+  );
+}
+```
+
+## TypeScript
+
+Better Themes is fully typed. Import types for your own components:
+
+```tsx
+import type { ThemeProviderProps, UseThemeProps } from "better-themes";
+
+function CustomProvider(props: ThemeProviderProps) {
+  // ...
+}
+
+function useCustomTheme(): UseThemeProps {
+  // ...
+}
+```
+

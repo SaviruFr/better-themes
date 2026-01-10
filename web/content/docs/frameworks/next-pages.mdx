@@ -1,0 +1,166 @@
+---
+title: Next.js Pages Router
+description: Setup guide for Next.js Pages Router
+icon: FileText
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Update `_app.tsx`
+
+Wrap your app with `ThemeProvider` in `pages/_app.tsx`:
+
+```tsx title="pages/_app.tsx"
+import { ThemeProvider } from "better-themes";
+import type { AppProps } from "next/app";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ThemeProvider attribute="class" disableTransitionOnChange>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+```
+</Step>
+
+<Step>
+### Update `_document.tsx`
+
+Add `suppressHydrationWarning` to your `<html>` tag:
+
+```tsx title="pages/_document.tsx"
+import { Html, Head, Main, NextScript } from "next/document";
+
+export default function Document() {
+  return (
+    <Html lang="en" suppressHydrationWarning>
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
+}
+```
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+```tsx title="components/theme-switcher.tsx"
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Tailwind CSS Configuration
+
+If you're using Tailwind CSS, configure it for class-based dark mode:
+
+```js title="tailwind.config.js"
+export default {
+  darkMode: ["class"],
+  // ... rest of config
+};
+```
+
+## Complete Example
+
+```tsx title="pages/_app.tsx"
+import { ThemeProvider } from "better-themes";
+import type { AppProps } from "next/app";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ThemeProvider attribute="class" disableTransitionOnChange>
+      <ThemeSwitcher />
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+```
+
+```tsx title="pages/_document.tsx"
+import { Html, Head, Main, NextScript } from "next/document";
+
+export default function Document() {
+  return (
+    <Html lang="en" suppressHydrationWarning>
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
+}
+```
+
+## Notes
+
+- Use the default export (not `/rsc`) for Next.js Pages Router
+- Add `suppressHydrationWarning` to the `<Html>` component in `_document.tsx`
+
+
+## Example
+
+View a complete example implementation: [Next.js Pages Router Example](https://github.com/SaviruFr/better-themes/tree/main/examples/next-pages)
+
+View the live example: [Live Demo](https://next-pages-better-themes.netlify.app/)
+

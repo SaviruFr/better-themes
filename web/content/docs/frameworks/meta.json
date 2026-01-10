@@ -1,0 +1,12 @@
+{
+  "title": "Frameworks",
+  "pages": [
+    "next-app",
+    "next-pages",
+    "tanstack",
+    "waku",
+    "vite",
+    "remix",
+    "fumadocs"  ]
+}
+

@@ -1,0 +1,26 @@
+{
+	"name": "theme-switchers",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@radix-ui/react-dropdown-menu": "^2.1.16",
+		"@radix-ui/react-label": "^2.1.8",
+		"@radix-ui/react-radio-group": "^1.3.8",
+		"@radix-ui/react-slot": "^1.2.4",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"lucide-react": "^0.456.0",
+		"react": "^19.2.3",
+		"react-dom": "^19.2.3",
+		"tailwind-merge": "^2.6.0",
+		"better-themes": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/react": "^19.2.7",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^5.9.3"
+	}
+}

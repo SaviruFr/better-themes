@@ -1,0 +1,6 @@
+[build]
+  command = "pnpm --filter better-themes build && pnpm --filter next-app build"
+  publish = "examples/next-app/.next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

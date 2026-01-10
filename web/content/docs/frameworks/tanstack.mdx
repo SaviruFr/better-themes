@@ -1,0 +1,142 @@
+---
+title: TanStack Start
+description: Setup guide for TanStack Start
+icon: Layers
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Update your root route
+
+In your root route file (typically `routes/__root.tsx`), wrap your app with `ThemeProvider`:
+
+```tsx title="routes/__root.tsx"
+import { createRootRoute } from "@tanstack/react-router";
+import { ThemeProvider } from "better-themes";
+import { HeadContent, Scripts } from "@tanstack/react-router";
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export const Route = createRootRoute({
+  component: RootDocument,
+});
+```
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+```tsx title="components/theme-switcher.tsx"
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Complete Example
+
+```tsx title="routes/__root.tsx"
+import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { ThemeProvider } from "better-themes";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeSwitcher />
+          {children}
+        </ThemeProvider>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export const Route = createRootRoute({
+  component: RootDocument,
+});
+```
+
+## Notes
+
+- Use the default export for TanStack Start
+- Add `suppressHydrationWarning` to the `<html>` tag
+
+
+## Example
+
+View a complete example implementation: [TanStack Start Example](https://github.com/SaviruFr/better-themes/tree/main/examples/tanstack)
+
+View the live example: [Live Demo](https://tanstack-better-themes.netlify.app/)
+

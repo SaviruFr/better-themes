@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "index",
+    "installation",
+    "quick-start",
+    "api",
+    "frameworks",
+    "theme-switchers",
+    "ssr",
+    "advanced"
+  ]
+}

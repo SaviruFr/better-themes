@@ -1,0 +1,169 @@
+---
+title: Remix / React Router v7
+description: Setup guide for Remix and React Router v7
+icon: Waypoints
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Create or update your root layout
+
+In `app/root.tsx`, wrap your app with `ThemeProvider`:
+
+```tsx title="app/root.tsx"
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from "react-router"; // or "@remix-run/react"
+import { ThemeProvider } from "better-themes";
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export default function App() {
+  return <Outlet />;
+}
+```
+</Step>
+
+<Step>
+### Add `suppressHydrationWarning`
+
+Add `suppressHydrationWarning` to your `<html>` tag in `app/root.tsx` to prevent hydration warnings.
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+Create a component for theme switching:
+
+```tsx title="app/components/theme-switcher.tsx"
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Tailwind CSS Configuration
+
+If you're using Tailwind CSS, configure it for class-based dark mode:
+
+```js title="tailwind.config.js"
+export default {
+  darkMode: ["class"],
+  // ... rest of config
+};
+```
+
+## Complete Example
+
+```tsx title="app/root.tsx"
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from "react-router";
+import { ThemeProvider } from "better-themes";
+import { ThemeSwitcher } from "./components/theme-switcher";
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeSwitcher />
+          {children}
+        </ThemeProvider>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+## Example
+
+View a complete example implementation: [Remix Example](https://github.com/SaviruFr/better-themes/tree/main/examples/remix)
+
+View the live example: [Live Demo](https://remix-better-themes.netlify.app/)

@@ -1,0 +1,36 @@
+---
+title: Getting Started
+description: A theme provider for React
+---
+
+# Getting Started
+
+This is a test documentation page to show how **better-themes** works. better-themes is a framework-agnostic theming solution for React applications. It provides seamless dark mode support with zero flash on load, system preference detection, and cross-tab synchronization.
+
+## Features
+
+- **Zero flash on load** - Prevents theme flash during page load (SSR/SSG safe)
+- **System preference detection** - Automatically detects and respects user's system theme preference
+- **Cross-tab synchronization** - Theme changes sync across browser tabs and windows
+- **Framework agnostic** - Works with Next.js, Remix, Vite, TanStack Start, Waku, and more
+
+## Quick Start
+
+Wrap your app with `ThemeProvider`:
+
+```tsx title="layout.tsx"
+import { ThemeProvider } from "better-themes/rsc";
+
+export default function Layout({ children }) {
+  return (
+    <ThemeProvider attribute="class">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+<Cards>
+  <Card title="Home" href="/" />
+  <Card title="Official Docs" href="https://better-themes.netlify.app/docs" />
+</Cards>

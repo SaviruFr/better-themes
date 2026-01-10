@@ -1,0 +1,233 @@
+---
+title: API Reference
+description: Complete API documentation for better-themes
+icon: Code
+---
+
+## ThemeProvider
+
+The main provider component that wraps your application.
+
+### Props
+
+<TypeTable
+  type={{
+    children: {
+      description: 'Child components',
+      type: 'ReactNode',
+      default: 'undefined'
+    },
+    themes: {
+      description: 'List of all available theme names',
+      type: 'string[]',
+      default: '["light", "dark"]'
+    },
+    forcedTheme: {
+      description: 'Forced theme name for the current page',
+      type: 'string',
+      default: 'undefined'
+    },
+    enableSystem: {
+      description: 'Whether to switch between dark and light themes based on prefers-color-scheme',
+      type: 'boolean',
+      default: 'true'
+    },
+    disableTransitionOnChange: {
+      description: 'Disable all CSS transitions when switching themes',
+      type: 'boolean',
+      default: 'false'
+    },
+    enableColorScheme: {
+      description: 'Whether to indicate to browsers which color scheme is used',
+      type: 'boolean',
+      default: 'true'
+    },
+    storageKey: {
+      description: 'Key used to store theme setting in localStorage',
+      type: 'string',
+      default: '"theme"'
+    },
+    defaultTheme: {
+      description: 'Default theme name',
+      type: 'string',
+      default: '"system" | "light"'
+    },
+    attribute: {
+      description: 'HTML attribute modified based on the active theme',
+      type: 'Attribute | Attribute[]',
+      default: '"class"'
+    },
+    value: {
+      description: 'Mapping of theme name to HTML attribute value',
+      type: 'ValueObject',
+      default: 'undefined'
+    },
+    nonce: {
+      description: 'Nonce string to pass to the inline script for CSP headers',
+      type: 'string',
+      default: 'undefined'
+    }
+  }}
+/>
+
+### Default Values
+
+- `themes`: `["light", "dark"]`
+- `defaultTheme`: `"system"` (if `enableSystem` is true), otherwise `"light"`
+- `storageKey`: `"theme"`
+- `enableSystem`: `true`
+- `enableColorScheme`: `true`
+- `attribute`: `"class"`
+- `disableTransitionOnChange`: `false`
+
+### Examples
+
+**Basic usage:**
+
+```tsx title="layout.tsx"
+<ThemeProvider>
+  {children}
+</ThemeProvider>
+```
+
+**With custom themes:**
+
+```tsx title="layout.tsx"
+<ThemeProvider themes={["light", "dark", "purple", "blue"]}>
+  {children}
+</ThemeProvider>
+```
+
+**With data attribute:**
+
+```tsx title="layout.tsx"
+<ThemeProvider attribute="data-theme">
+  {children}
+</ThemeProvider>
+```
+
+**Disable transitions on change:**
+
+```tsx title="layout.tsx"
+<ThemeProvider disableTransitionOnChange>
+  {children}
+</ThemeProvider>
+```
+
+**Force a specific theme:**
+
+```tsx title="layout.tsx"
+<ThemeProvider forcedTheme="dark">
+  {children}
+</ThemeProvider>
+```
+
+## useTheme Hook
+
+Returns theme state and controls.
+
+### Return Value
+
+```tsx
+interface UseThemeProps {
+  /** List of all available theme names */
+  themes: string[];
+  /** Forced theme name for the current page */
+  forcedTheme?: string;
+  /** Update the theme */
+  setTheme: Dispatch<SetStateAction<string>>;
+  /** Active theme name */
+  theme?: string;
+  /** System theme preference ("dark" or "light") */
+  systemTheme?: "dark" | "light";
+}
+```
+
+### Properties
+
+- `theme` - Current active theme name (`undefined` on server)
+- `setTheme` - Function to update theme (accepts string or callback)
+- `forcedTheme` - Forced theme if set, otherwise `undefined`
+- `themes` - Array of all available themes (includes `"system"` if enabled)
+- `systemTheme` - System preference (`"dark"` or `"light"`, only if `enableSystem` is true)
+
+### Examples
+
+**Basic usage:**
+
+```tsx title="ThemeToggle.tsx" twoslash
+import { useTheme } from "better-themes";
+
+// ---cut---
+const { theme, setTheme } = useTheme();
+
+setTheme("dark");
+```
+
+**With callback:**
+
+```tsx title="ThemeToggle.tsx" twoslash
+import { useTheme } from "better-themes";
+
+// ---cut---
+const { theme, setTheme } = useTheme();
+
+setTheme((current) => current === "dark" ? "light" : "dark");
+```
+
+**Access system theme:**
+
+```tsx title="ThemeToggle.tsx" twoslash
+import { useTheme } from "better-themes";
+
+// ---cut---
+const { systemTheme } = useTheme();
+
+console.log(systemTheme); // "dark" or "light"
+```
+
+## Types
+
+### Attribute
+
+```tsx
+type Attribute = `data-${string}` | "class";
+```
+
+The HTML attribute type that can be modified. Can be `"class"` or any `data-*` attribute.
+
+### ValueObject
+
+```tsx
+interface ValueObject {
+  [themeName: string]: string;
+}
+```
+
+Mapping of theme names to HTML attribute values. Useful when you want different attribute values than theme names.
+
+### Example
+
+```tsx title="layout.tsx"
+<ThemeProvider
+  themes={["light", "dark", "purple"]}
+  value={{
+    light: "light-mode",
+    dark: "dark-mode",
+    purple: "purple-mode"
+  }}
+>
+  {children}
+</ThemeProvider>
+```
+
+## RSC Export
+
+For Next.js App Router and other React Server Components frameworks, use the `/rsc` export:
+
+```tsx title="layout.tsx"
+import { ThemeProvider, useTheme } from "better-themes/rsc";
+```
+
+This ensures proper server component compatibility. The API is identical to the main export.
+

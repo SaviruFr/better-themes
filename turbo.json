@@ -1,0 +1,33 @@
+{
+	"$schema": "./node_modules/turbo/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build", "better-themes#build"],
+			"outputs": [
+				"dist/**",
+				".next/**",
+				"out/**",
+				"!.next/cache/**",
+				".output/**",
+				"build/**"
+			]
+		},
+		"better-themes#build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"lint": {
+			"dependsOn": ["^build"]
+		},
+		"format": {},
+		"format:check": {},
+		"test": {
+			"dependsOn": ["^build"]
+		}
+	}
+}

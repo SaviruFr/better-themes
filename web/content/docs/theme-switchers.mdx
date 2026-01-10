@@ -1,0 +1,198 @@
+---
+title: Theme Switchers
+description: Beautiful theme switcher components for your application
+icon: Component
+---
+
+Here are some examples of beautiful theme switchers you can use in your application. We provide implementation using **Shadcn UI** and a **Custom** implementation without external UI libraries.
+
+## Shadcn UI
+
+These examples require `lucide-react` icons and Shadcn UI components.
+
+### Radio Group Switcher
+
+Uses `RadioGroup` and `Label` components.
+
+<Steps>
+<Step>
+#### Component
+
+```tsx title="components/radio-switcher.tsx"
+"use client";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
+
+const themeOptions = [
+  { value: "dark", icon: Moon, label: "Dark" },
+  { value: "light", icon: Sun, label: "Light" },
+  { value: "system", icon: Monitor, label: "System" },
+];
+
+export function RadioSwitcher() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <RadioGroup
+      defaultValue={mounted ? theme : undefined}
+      onValueChange={mounted ? (value) => setTheme(value) : undefined}
+      className="flex items-center gap-2"
+    >
+      <div className="flex bg-muted p-1 rounded-full border border-border">
+        {themeOptions.map(({ value, icon: Icon, label }) => (
+          <Label
+            key={value}
+            htmlFor={value}
+            className={cn(
+              "flex items-center justify-center p-1.5 rounded-full cursor-pointer transition-colors",
+              mounted && theme === value
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <RadioGroupItem value={value} id={value} className="sr-only" />
+            <Icon fill="currentColor" className="w-3.5 h-3.5" />
+            <span className="sr-only">{label}</span>
+          </Label>
+        ))}
+      </div>
+    </RadioGroup>
+  );
+}
+```
+</Step>
+</Steps>
+
+### Button Toggle
+
+A compact toggle button using the `Button` component.
+
+```tsx title="components/button-toggle.tsx"
+"use client";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "better-themes";
+import { Button } from "@/components/ui/button";
+
+export function ButtonToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+    >
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  );
+}
+```
+
+
+## Custom Implementation
+
+These implementations use standard HTML elements and Tailwind CSS, requiring no external UI libraries besides `lucide-react` for icons.
+
+### Custom Radio Switcher
+
+```tsx title="components/custom-radio-switcher.tsx"
+"use client";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+
+const themeOptions = [
+  { value: "dark", icon: Moon, label: "Dark" },
+  { value: "light", icon: Sun, label: "Light" },
+  { value: "system", icon: Monitor, label: "System" },
+];
+
+export function CustomThemeSwitcher() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex bg-muted p-1 rounded-full border border-border">
+        {themeOptions.map(({ value, icon: Icon, label }) => (
+          <button
+            key={value}
+            onClick={() => setTheme(value)}
+            className={cn(
+              "flex items-center justify-center p-1.5 rounded-full cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              theme === value
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+            title={label}
+            aria-label={label}
+            aria-pressed={theme === value}
+          >
+            <Icon fill="currentColor" className="w-3.5 h-3.5" />
+            <span className="sr-only">{label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### Simple Toggle
+
+A simpler toggle button that switches between light and dark mode.
+
+```tsx title="components/simple-toggle.tsx"
+"use client";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function SimpleToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="p-2 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors"
+      aria-label="Toggle theme"
+    >
+      {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+    </button>
+  );
+}
+```
+
+
+## Examples
+
+Full source code: [Better Themes Examples](https://github.com/SaviruFr/better-themes/tree/main/examples/theme-switchers)

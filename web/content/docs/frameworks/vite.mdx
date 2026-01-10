@@ -1,0 +1,163 @@
+---
+title: Vite
+description: Setup guide for Vite and Create React App
+icon: Zap
+---
+
+## Installation
+
+<CodeBlockTabs defaultValue="npm" groupId="package-manager" persist>
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="bun">bun</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="npm">
+    ```bash
+    npm install better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pnpm">
+    ```bash
+    pnpm add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="yarn">
+    ```bash
+    yarn add better-themes
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="bun">
+    ```bash
+    bun add better-themes
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Setup
+
+<Steps>
+<Step>
+### Update your root component
+
+In your main entry file (typically `main.tsx` or `App.tsx`), wrap your app with `ThemeProvider`:
+
+```tsx title="main.tsx"
+import { ThemeProvider } from "better-themes";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./global.css";
+
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
+```
+</Step>
+
+<Step>
+### Style your app
+
+```css title="global.css"
+:root {
+  --background: white;
+  --foreground: black;
+}
+
+.dark {
+  --background: black;
+  --foreground: white;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+```
+</Step>
+
+<Step>
+### Create a theme switcher component
+
+```tsx title="components/ThemeSwitcher.tsx"
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+</Step>
+</Steps>
+
+## Complete Example
+
+```tsx title="main.tsx"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./global.css";
+import App from "./App.tsx";
+import { ThemeProvider } from "better-themes";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </StrictMode>
+);
+```
+
+```tsx title="components/ThemeSwitcher.tsx"
+import { useTheme } from "better-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      {theme === "dark" ? "Light" : "Dark"}
+    </button>
+  );
+}
+```
+
+## Notes
+
+- Use the default export for Vite
+- If using Vite with SSR, add `suppressHydrationWarning` to the `<html>` tag
+- Works with both Vite and Create React App
+
+## Example
+
+View a complete example implementation: [Vite Example](https://github.com/SaviruFr/better-themes/tree/main/examples/vite)
+
+View the live example: [Live Demo](https://vite-better-themes.netlify.app/)
+

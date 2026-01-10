@@ -1,0 +1,134 @@
+---
+title: SSR & Hydration
+description: Server-side rendering and hydration guide
+icon: Server
+---
+
+## Understanding SSR Behavior
+
+Better Themes is designed to work seamlessly with server-side rendering. The theme value is `undefined` on the server to prevent hydration mismatches.
+
+## The Problem
+
+When using SSR, the server doesn't know the user's theme preference. If you render theme-dependent UI on the server, it may not match what's rendered on the client, causing hydration errors.
+
+## The Solution
+
+Only render theme-dependent UI after the component mounts on the client:
+
+```tsx
+import { useEffect, useState } from "react";
+import { useTheme } from "better-themes";
+
+function ThemeSwitcher() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme, themes } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div>Loading...</div>; // or a skeleton
+  }
+
+  return (
+    <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+      {themes.map((t) => (
+        <option key={t} value={t}>
+          {t}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+## Best Practices
+
+### 1. Use a mounted state
+
+Always check if the component has mounted before rendering theme-dependent UI:
+
+```tsx
+const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+  setMounted(true);
+}, []);
+
+if (!mounted) {
+  return null; // or a loading state
+}
+```
+
+### 2. Provide fallback UI
+
+Show a neutral loading state or skeleton while waiting for hydration:
+
+```tsx
+if (!mounted) {
+  return <Skeleton className="w-32 h-10" />;
+}
+```
+
+### 3. Use CSS for initial styles
+
+Use CSS to handle initial theme styles, not JavaScript:
+
+```css
+:root {
+  background: white;
+  color: black;
+}
+
+[data-theme='dark'] {
+  background: black;
+  color: white;
+}
+```
+
+### 4. Avoid theme checks in render
+
+Don't conditionally render based on theme before mounting:
+
+```tsx
+// Bad - theme is undefined on server
+{theme === "dark" && <DarkComponent />}
+
+// Good - check mounted first
+{mounted && theme === "dark" && <DarkComponent />}
+```
+
+## Zero Flash Strategy
+
+Better Themes prevents flash by injecting a script before React hydrates. This script:
+
+1. Reads the theme from localStorage
+2. Applies the theme immediately
+3. Prevents any flash of unstyled content
+
+The script runs synchronously before the page renders, ensuring zero flash.
+
+## Framework-Specific Notes
+
+### Next.js App Router
+
+Use the `/rsc` export for proper server component support:
+
+```tsx twoslash
+import { ThemeProvider } from "better-themes/rsc";
+```
+
+### Next.js Pages Router
+
+Use the default export:
+
+```tsx
+import { ThemeProvider } from "better-themes";
+```
+
+### Other Frameworks
+
+All frameworks use the default export. The SSR behavior is consistent across all React frameworks.
+
