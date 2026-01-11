@@ -18,12 +18,6 @@
 		"lint": "pnpm biome lint .",
 		"lint:fix": "pnpm biome check --write .",
 		"test": "pnpm --filter '*' test",
-		"changeset": "pnpm dlx @changesets/cli",
-		"changeset:add": "pnpm dlx @changesets/cli add",
-		"changeset:version": "pnpm dlx @changesets/cli version",
-		"changeset:publish": "pnpm dlx @changesets/cli publish",
-		"changeset:status": "pnpm dlx @changesets/cli status",
-		"release": "pnpm build:package && pnpm dlx @changesets/cli publish",
 		"ci": "pnpm lint && pnpm format:check && pnpm build"
 	},
 	"type": "module"

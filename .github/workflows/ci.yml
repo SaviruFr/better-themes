@@ -1,40 +1,40 @@
 name: CI
 on:
-  pull_request:
-    branches: [main, dev]
-  push:
-    branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+    push:
+        branches: [main, dev]
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24'
-          cache: 'pnpm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "24"
+                  cache: "pnpm"
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Run Biome lint
-        run: pnpm run lint
+            - name: Run Biome lint
+              run: pnpm run lint
 
-      - name: Run Biome format check
-        run: pnpm run format:check
+            - name: Run Biome format check
+              run: pnpm run format:check
 
-      - name: Build package
-        run: pnpm run build:package
+            - name: Build package
+              run: pnpm run build:package
 
-      - name: Check for changesets
-        run: pnpm dlx @changesets/cli status --since=main || echo "No changesets found (this is non-blocking)"
-        continue-on-error: true
+            - name: Check for changesets
+              run: pnpm --filter better-themes run changeset:status || echo "No changesets found (this is non-blocking)"
+              continue-on-error: true
