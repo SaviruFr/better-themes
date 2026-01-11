@@ -16,6 +16,10 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - name: Fetch main branch for changeset comparison
+              run: git fetch origin main:main
+              continue-on-error: true
+
             - name: Install pnpm
               uses: pnpm/action-setup@v4
 
