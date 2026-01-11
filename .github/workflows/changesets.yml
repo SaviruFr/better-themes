@@ -5,6 +5,8 @@ on:
         branches:
             - main
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 permissions:
     contents: write
     pull-requests: write
@@ -35,13 +37,35 @@ jobs:
               run: pnpm run build:package
 
             - name: Create Release Pull Request or Publish
+              id: changesets
               uses: changesets/action@v1
               with:
                   version: pnpm changeset:version
                   publish: pnpm changeset:publish
                   commit: "chore: 🔖 version packages"
                   title: "chore: 🔖 version packages"
+                  createGithubReleases: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Create GitHub Release
+              if: steps.changesets.outputs.published == 'true'
+              run: |
+                  VERSION=$(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[0].version // empty')
+                  if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+                    echo "Error: No valid version found in publishedPackages"
+                    exit 1
+                  fi
+
+                  VERSION_ESCAPED=$(echo "$VERSION" | sed 's/\./\\./g')
+
+                  NOTES=$(awk '/^## '"$VERSION_ESCAPED"'/{flag=1; next} /^## [0-9]+\.[0-9]+\.[0-9]+/{flag=0} flag' better-themes/CHANGELOG.md)
+
+                  gh release create "v${VERSION}" \
+                    --title "v${VERSION}" \
+                    --notes "$NOTES" \
+                    --target main
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
