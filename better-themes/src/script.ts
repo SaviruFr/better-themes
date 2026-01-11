@@ -2,6 +2,7 @@ import type { Attribute, ValueObject } from "./types";
 
 export const script = (
 	attribute: Attribute | Attribute[],
+	storageConfig: "localStorage" | "sessionStorage",
 	storageKey: string,
 	defaultTheme: string,
 	forcedTheme: string | undefined,
@@ -60,6 +61,21 @@ export const script = (
 			: "light";
 	}
 
+	function getStoredTheme() {
+		try {
+			switch (storageConfig) {
+				case "localStorage":
+					return localStorage.getItem(storageKey);
+				case "sessionStorage":
+					return sessionStorage.getItem(storageKey);
+				default:
+					return localStorage.getItem(storageKey);
+			}
+		} catch {
+			return null;
+		}
+	}
+
 	if (forcedTheme) {
 		const resolvedForcedTheme =
 			forcedTheme === "system" && enableSystem
@@ -67,13 +83,9 @@ export const script = (
 				: forcedTheme;
 		updateDOM(resolvedForcedTheme);
 	} else {
-		try {
-			const themeName = localStorage.getItem(storageKey) || defaultTheme;
-			const isSystem = enableSystem && themeName === "system";
-			const theme = isSystem ? resolveSystemTheme() : themeName;
-			updateDOM(theme);
-		} catch {
-			// localStorage might not be available
-		}
+		const themeName = getStoredTheme() || defaultTheme;
+		const isSystem = enableSystem && themeName === "system";
+		const theme = isSystem ? resolveSystemTheme() : themeName;
+		updateDOM(theme);
 	}
 };

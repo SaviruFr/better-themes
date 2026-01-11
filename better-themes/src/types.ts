@@ -32,7 +32,9 @@ export interface ThemeProviderProps {
 	disableTransitionOnChange?: boolean | undefined;
 	/** Whether to indicate to browsers which color scheme is used (dark or light) for built-in UI like inputs and buttons */
 	enableColorScheme?: boolean | undefined;
-	/** Key used to store theme setting in localStorage */
+	/** Storage type for theme setting */
+	storage?: "localStorage" | "sessionStorage" | undefined;
+	/** Key used to store theme setting in storage */
 	storageKey?: string | undefined;
 	/** Default theme name (for v0.0.12 and lower the default was light). If `enableSystem` is false, the default theme is light */
 	defaultTheme?: string | undefined;

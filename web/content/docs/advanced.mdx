@@ -10,7 +10,7 @@ You can define custom themes beyond light and dark:
 
 ```tsx
 <ThemeProvider themes={["light", "dark", "purple", "blue", "green"]}>
-  {children}
+    {children}
 </ThemeProvider>
 ```
 
@@ -18,15 +18,15 @@ Use the `value` prop to map theme names to different attribute values:
 
 ```tsx
 <ThemeProvider
-  themes={["light", "dark", "purple"]}
-  value={{
-    light: "light-mode",
-    dark: "dark-mode",
-    purple: "purple-mode"
-  }}
-  attribute="data-theme"
+    themes={["light", "dark", "purple"]}
+    value={{
+        light: "light-mode",
+        dark: "dark-mode",
+        purple: "purple-mode",
+    }}
+    attribute="data-theme"
 >
-  {children}
+    {children}
 </ThemeProvider>
 ```
 
@@ -35,9 +35,7 @@ Use the `value` prop to map theme names to different attribute values:
 You can apply themes to multiple attributes simultaneously:
 
 ```tsx
-<ThemeProvider attribute={["class", "data-theme"]}>
-  {children}
-</ThemeProvider>
+<ThemeProvider attribute={["class", "data-theme"]}>{children}</ThemeProvider>
 ```
 
 This is useful when you need both class-based styling (for Tailwind) and data attributes (for custom CSS).
@@ -47,12 +45,11 @@ This is useful when you need both class-based styling (for Tailwind) and data at
 Force a specific theme for a page or section:
 
 ```tsx
-<ThemeProvider forcedTheme="dark">
-  {children}
-</ThemeProvider>
+<ThemeProvider forcedTheme="dark">{children}</ThemeProvider>
 ```
 
 When `forcedTheme` is set, it overrides user preferences and localStorage. This is useful for:
+
 - Landing pages that should always be light
 - Documentation sections that should always be dark
 - A/B testing different themes
@@ -63,20 +60,37 @@ Disable system theme detection:
 
 ```tsx
 <ThemeProvider enableSystem={false} defaultTheme="light">
-  {children}
+    {children}
 </ThemeProvider>
 ```
 
 When `enableSystem` is false, the `"system"` option is removed from available themes.
 
-## Custom Storage Key
+## Storage Options
 
-Change the localStorage key used to store theme preferences:
+By default, Better Themes uses `localStorage` to persist theme preferences across all tabs. You can switch to `sessionStorage` for per-tab theme isolation:
 
 ```tsx
-<ThemeProvider storageKey="my-app-theme">
-  {children}
-</ThemeProvider>
+<ThemeProvider storage="sessionStorage">{children}</ThemeProvider>
+```
+
+### localStorage vs sessionStorage
+
+| Storage Type             | Behavior               |
+| ------------------------ | ---------------------- |
+| `localStorage` (default) | Shared across all tabs |
+| `sessionStorage`         | Isolated per tab       |
+
+### When to use sessionStorage
+
+Use `sessionStorage` when you need different themes in different tabs. For example, in a multi-user environment where multiple users are logged into different accounts in separate tabs, each user can have their own theme preference.
+
+## Custom Storage Key
+
+Change the key used to store theme preferences:
+
+```tsx
+<ThemeProvider storageKey="my-app-theme">{children}</ThemeProvider>
 ```
 
 Useful when you have multiple theme providers in the same app or want to avoid conflicts with other libraries.
@@ -86,9 +100,7 @@ Useful when you have multiple theme providers in the same app or want to avoid c
 Disable the `color-scheme` CSS property:
 
 ```tsx
-<ThemeProvider enableColorScheme={false}>
-  {children}
-</ThemeProvider>
+<ThemeProvider enableColorScheme={false}>{children}</ThemeProvider>
 ```
 
 The `color-scheme` property tells browsers which color scheme to use for native UI elements. You might want to disable it if you're handling this manually.
@@ -98,9 +110,7 @@ The `color-scheme` property tells browsers which color scheme to use for native 
 Disable CSS transitions when switching themes:
 
 ```tsx
-<ThemeProvider disableTransitionOnChange>
-  {children}
-</ThemeProvider>
+<ThemeProvider disableTransitionOnChange>{children}</ThemeProvider>
 ```
 
 This prevents flashy transitions when themes change. Better Themes temporarily disables all transitions, applies the theme, then re-enables them.
@@ -110,9 +120,7 @@ This prevents flashy transitions when themes change. Better Themes temporarily d
 If you're using CSP headers, provide a nonce for the inline script:
 
 ```tsx
-<ThemeProvider nonce="your-nonce-here">
-  {children}
-</ThemeProvider>
+<ThemeProvider nonce="your-nonce-here">{children}</ThemeProvider>
 ```
 
 The nonce is passed to the inline script that prevents flash on load.
@@ -126,19 +134,19 @@ import { useTheme } from "better-themes";
 
 // ---cut---
 function MyComponent() {
-  const { theme, setTheme, themes, systemTheme } = useTheme();
+    const { theme, setTheme, themes, systemTheme } = useTheme();
 
-  // Set theme directly
-  setTheme("dark");
+    // Set theme directly
+    setTheme("dark");
 
-  // Set theme with callback
-  setTheme((current) => current === "dark" ? "light" : "dark");
+    // Set theme with callback
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
 
-  // Access all available themes
-  console.log(themes); // ["light", "dark", "system"]
+    // Access all available themes
+    console.log(themes); // ["light", "dark", "system"]
 
-  // Access system preference
-  console.log(systemTheme); // "dark" or "light"
+    // Access system preference
+    console.log(systemTheme); // "dark" or "light"
 }
 ```
 
@@ -151,23 +159,23 @@ import { useTheme } from "better-themes";
 import { useEffect, useState } from "react";
 
 function ThemedContent() {
-  const [mounted, setMounted] = useState(false);
-  const { theme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const { theme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
-  if (!mounted) {
-    return <div>Loading...</div>;
-  }
+    if (!mounted) {
+        return <div>Loading...</div>;
+    }
 
-  return (
-    <div>
-      {theme === "dark" && <DarkContent />}
-      {theme === "light" && <LightContent />}
-    </div>
-  );
+    return (
+        <div>
+            {theme === "dark" && <DarkContent />}
+            {theme === "light" && <LightContent />}
+        </div>
+    );
 }
 ```
 
@@ -179,11 +187,10 @@ Better Themes is fully typed. Import types for your own components:
 import type { ThemeProviderProps, UseThemeProps } from "better-themes";
 
 function CustomProvider(props: ThemeProviderProps) {
-  // ...
+    // ...
 }
 
 function useCustomTheme(): UseThemeProps {
-  // ...
+    // ...
 }
 ```
-

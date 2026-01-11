@@ -9,6 +9,7 @@ import {
 	useState,
 } from "react";
 import { script } from "./script";
+import { createStorageAdapter } from "./storage";
 import type { ThemeProviderProps, UseThemeProps } from "./types";
 
 const colorSchemes = ["light", "dark"];
@@ -40,6 +41,7 @@ const Theme = ({
 	disableTransitionOnChange = false,
 	enableSystem = true,
 	enableColorScheme = true,
+	storage = "localStorage",
 	storageKey = "theme",
 	themes = defaultThemes,
 	defaultTheme = enableSystem ? "system" : "light",
@@ -48,8 +50,13 @@ const Theme = ({
 	children,
 	nonce,
 }: ThemeProviderProps) => {
+	const storageAdapter = useMemo(
+		() => createStorageAdapter(storage),
+		[storage],
+	);
+
 	const [theme, setThemeState] = useState(() =>
-		getTheme(storageKey, defaultTheme),
+		getTheme(storageKey, defaultTheme, storageAdapter),
 	);
 
 	const applyClassAttribute = useCallback(
@@ -136,13 +143,9 @@ const Theme = ({
 				typeof newValue === "function" ? newValue(theme ?? "") : newValue;
 			setThemeState(newTheme);
 
-			try {
-				localStorage.setItem(storageKey, newTheme);
-			} catch {
-				// localStorage might not be available
-			}
+			storageAdapter.setItem(storageKey, newTheme);
 		},
-		[theme, storageKey],
+		[theme, storageKey, storageAdapter],
 	);
 
 	const handleMediaQuery = useCallback(
@@ -173,8 +176,13 @@ const Theme = ({
 			return;
 		}
 
+		// For localStorage and sessionStorage
 		const handleStorage = (e: StorageEvent) => {
-			if (e.key !== storageKey) {
+			if (
+				e.key !== storageKey ||
+				e.storageArea !==
+					(storage === "localStorage" ? localStorage : sessionStorage)
+			) {
 				return;
 			}
 
@@ -184,7 +192,7 @@ const Theme = ({
 
 		window.addEventListener("storage", handleStorage);
 		return () => window.removeEventListener("storage", handleStorage);
-	}, [defaultTheme, setTheme, storageKey]);
+	}, [defaultTheme, setTheme, storageKey, storage]);
 
 	useEffect(() => {
 		applyTheme(forcedTheme ?? theme);
@@ -208,6 +216,7 @@ const Theme = ({
 			<ThemeScript
 				{...{
 					forcedTheme,
+					storage,
 					storageKey,
 					attribute,
 					enableSystem,
@@ -226,6 +235,7 @@ const Theme = ({
 const ThemeScript = memo(
 	({
 		forcedTheme,
+		storage = "localStorage",
 		storageKey,
 		attribute,
 		enableSystem,
@@ -237,6 +247,7 @@ const ThemeScript = memo(
 	}: Omit<ThemeProviderProps, "children"> & { defaultTheme: string }) => {
 		const scriptArgs = JSON.stringify([
 			attribute,
+			storage,
 			storageKey,
 			defaultTheme,
 			forcedTheme,
@@ -259,15 +270,24 @@ const ThemeScript = memo(
 	},
 );
 
-const getTheme = (key: string, fallback?: string) => {
+const getTheme = (
+	key: string,
+	fallback?: string,
+	storageAdapter?: ReturnType<typeof createStorageAdapter>,
+) => {
 	if (isServer) {
 		return fallback;
 	}
 	let theme: string | undefined;
 	try {
-		theme = localStorage.getItem(key) || undefined;
+		if (storageAdapter) {
+			theme = storageAdapter.getItem(key) || undefined;
+		} else {
+			// Fallback to localStorage for backward compatibility
+			theme = localStorage.getItem(key) || undefined;
+		}
 	} catch {
-		// localStorage might not be available
+		// Storage might not be available
 	}
 	return theme || fallback;
 };
@@ -300,4 +320,5 @@ const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent) => {
 	return systemTheme;
 };
 
+export type { StorageInterface } from "./storage";
 export type { Attribute, ThemeProviderProps, UseThemeProps } from "./types";
