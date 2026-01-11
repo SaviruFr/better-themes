@@ -1,6 +1,6 @@
+import { useHydrated } from "@tanstack/react-router";
 import { useTheme } from "better-themes/rsc";
 import { Monitor, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
@@ -17,11 +17,7 @@ interface ThemeSwitcherProps {
 
 export function ThemeSwitcher({ size = "sm" }: ThemeSwitcherProps) {
 	const { theme, setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	const hydrated = useHydrated();
 
 	const sizeClasses = {
 		sm: {
@@ -44,7 +40,7 @@ export function ThemeSwitcher({ size = "sm" }: ThemeSwitcherProps) {
 
 	return (
 		<RadioGroup
-			value={mounted && theme ? theme : ""}
+			value={hydrated && theme ? theme : ""}
 			onValueChange={(value: string) => setTheme(value)}
 			className={cn("flex items-center", classes.container)}
 		>
@@ -61,7 +57,7 @@ export function ThemeSwitcher({ size = "sm" }: ThemeSwitcherProps) {
 						className={cn(
 							"flex items-center justify-center rounded-full cursor-pointer transition-colors",
 							classes.button,
-							mounted && theme === value
+							hydrated && theme === value
 								? "bg-background text-foreground shadow-sm"
 								: "text-muted-foreground hover:text-foreground",
 						)}

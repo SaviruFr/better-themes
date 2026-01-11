@@ -75,24 +75,19 @@ export const Route = createRootRoute({
 
 ```tsx title="components/theme-switcher.tsx"
 import { useTheme } from "better-themes";
-import { useEffect, useState } from "react";
+import { useHydrated } from "@tanstack/react-router";
 
 export function ThemeSwitcher() {
-  const [mounted, setMounted] = useState(false);
+  const hydrated = useHydrated();
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      Toggle theme
-    </button>
+    <button 
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      disabled={!hydrated}
+    >
+      {hydrated ? `Current: ${theme}` : "Loading..."}
+    
   );
 }
 ```
