@@ -42,5 +42,5 @@ jobs:
               run: pnpm run build:package
 
             - name: Check for changesets
-              run: pnpm --filter better-themes run changeset:status || echo "No changesets found (this is non-blocking)"
+              run: pnpm changeset:status || echo "No changesets found (this is non-blocking)"
               continue-on-error: true

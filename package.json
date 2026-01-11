@@ -2,10 +2,6 @@
 	"name": "better-themes",
 	"author": "SaviruFr",
 	"homepage": "https://better-themes.netlify.app",
-	"devDependencies": {
-		"@biomejs/biome": "2.3.11",
-		"turbo": "^2.7.3"
-	},
 	"license": "MIT",
 	"packageManager": "pnpm@10.28.0",
 	"scripts": {
@@ -18,7 +14,19 @@
 		"lint": "pnpm biome lint .",
 		"lint:fix": "pnpm biome check --write .",
 		"test": "pnpm --filter '*' test",
+		"changeset": "changeset",
+		"changeset:add": "changeset add",
+		"changeset:version": "changeset version",
+		"changeset:publish": "changeset publish",
+		"changeset:status": "changeset status --since=main",
+		"release": "pnpm build:package && changeset publish",
 		"ci": "pnpm lint && pnpm format:check && pnpm build"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.11",
+		"@changesets/changelog-github": "^0.5.2",
+		"@changesets/cli": "^2.29.8",
+		"turbo": "^2.7.3"
 	},
 	"type": "module"
 }
