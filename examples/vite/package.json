@@ -1,5 +1,5 @@
 {
-	"name": "vite",
+	"name": "example-vite",
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {

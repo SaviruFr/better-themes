@@ -10,5 +10,19 @@
 	"access": "public",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",
-	"ignore": []
+	"ignore": [
+		"example-fumadocs",
+		"example-next-app",
+		"example-next-pages",
+		"example-remix",
+		"example-tanstack",
+		"example-theme-switchers",
+		"example-vite",
+		"example-waku",
+		"web"
+	],
+	"privatePackages": {
+		"version": false,
+		"tag": false
+	}
 }

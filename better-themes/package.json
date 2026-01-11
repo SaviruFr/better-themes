@@ -11,7 +11,13 @@
     "format": "pnpm biome format --write .",
     "format:check": "pnpm biome format .",
     "lint": "pnpm biome lint .",
-    "lint:fix": "pnpm biome check --write ."
+    "lint:fix": "pnpm biome check --write .",
+    "changeset": "changeset",
+    "changeset:add": "changeset add",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "changeset:status": "changeset status --since=main",
+    "release": "pnpm build && changeset publish"
   },
   "type": "module",
   "main": "./dist/index.cjs",
