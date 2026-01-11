@@ -16,7 +16,7 @@
     "changeset:add": "changeset add",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
-    "changeset:status": "changeset status",
+    "changeset:status": "changeset status --since=main",
     "release": "pnpm build && changeset publish"
   },
   "type": "module",
