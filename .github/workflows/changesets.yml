@@ -37,10 +37,11 @@ jobs:
             - name: Create Release Pull Request or Publish
               uses: changesets/action@v1
               with:
-                  version: pnpm --filter better-themes run changeset:version
-                  publish: pnpm --filter better-themes run changeset:publish
-                  commit: "chore: :bookmark: version packages"
-                  title: "chore: :bookmark: version packages"
+                  cwd: better-themes
+                  version: pnpm changeset:version
+                  publish: pnpm changeset:publish
+                  commit: "chore: 🔖 version packages"
+                  title: "chore: 🔖 version packages"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
