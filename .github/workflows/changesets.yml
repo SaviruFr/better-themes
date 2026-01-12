@@ -61,11 +61,19 @@ jobs:
 
                   VERSION_ESCAPED=$(echo "$VERSION" | sed 's/\./\\./g')
 
-                  NOTES=$(awk '/^## '"$VERSION_ESCAPED"'/{flag=1; next} /^## [0-9]+\.[0-9]+\.[0-9]+/{flag=0} flag' better-themes/CHANGELOG.md)
+                  NOTES=$(awk '/^## '"$VERSION_ESCAPED"'/{flag=1; next} /^## /{flag=0} flag' better-themes/CHANGELOG.md)
 
-                  gh release create "v${VERSION}" \
-                    --title "v${VERSION}" \
-                    --notes "$NOTES" \
-                    --target main
+                  if [ -z "$NOTES" ]; then
+                    echo "Warning: No release notes found for version $VERSION in CHANGELOG.md, using auto-generated notes"
+                    gh release create "v${VERSION}" \
+                      --title "v${VERSION}" \
+                      --generate-notes \
+                      --target main
+                  else
+                    gh release create "v${VERSION}" \
+                      --title "v${VERSION}" \
+                      --notes "$NOTES" \
+                      --target main
+                  fi
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
