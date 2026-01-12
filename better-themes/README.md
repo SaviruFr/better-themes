@@ -40,16 +40,18 @@ For React Server Components, import from `better-themes/rsc`:
 ```tsx
 import { ThemeProvider } from "better-themes/rsc";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body>
+                <ThemeProvider>{children}</ThemeProvider>
+            </body>
+        </html>
+    );
 }
 ```
 
@@ -61,11 +63,7 @@ For client-side applications or other frameworks:
 import { ThemeProvider } from "better-themes";
 
 function App() {
-  return (
-    <ThemeProvider>
-      {/* Your app content */}
-    </ThemeProvider>
-  );
+    return <ThemeProvider>{/* Your app content */}</ThemeProvider>;
 }
 ```
 
@@ -76,21 +74,21 @@ function App() {
 Access the current theme and change it with the `useTheme` hook:
 
 ```tsx
-"use client"
+"use client";
 
 import { useTheme } from "better-themes";
 
 function ThemeToggle() {
-  const { theme, setTheme, themes } = useTheme();
+    const { theme, setTheme, themes } = useTheme();
 
-  return (
-    <div>
-      <p>Current theme: {theme}</p>
-      <button onClick={() => setTheme("light")}>Light</button>
-      <button onClick={() => setTheme("dark")}>Dark</button>
-      <button onClick={() => setTheme("system")}>System</button>
-    </div>
-  );
+    return (
+        <div>
+            <p>Current theme: {theme}</p>
+            <button onClick={() => setTheme("light")}>Light</button>
+            <button onClick={() => setTheme("dark")}>Dark</button>
+            <button onClick={() => setTheme("system")}>System</button>
+        </div>
+    );
 }
 ```
 
@@ -100,7 +98,8 @@ The `ThemeProvider` accepts the following props:
 
 - `themes` - List of available theme names (default: `["light", "dark"]`)
 - `defaultTheme` - Default theme when no preference is saved (default: `"system"` if enableSystem is true, else `"light"`)
-- `storageKey` - localStorage key for storing theme preference (default: `"theme"`)
+- `storage` - Storage type for persisting theme preference (default: `"localStorage"`, can be `"localStorage"` or `"sessionStorage"`)
+- `storageKey` - Key used to store theme preference in storage (default: `"theme"`)
 - `forcedTheme` - Force a specific theme (overrides user preference)
 - `enableSystem` - Enable system theme detection (default: `true`)
 - `enableColorScheme` - Set `color-scheme` CSS property (default: `true`)
@@ -114,17 +113,13 @@ The `ThemeProvider` accepts the following props:
 Use class-based dark mode in Tailwind:
 
 ```tsx
-<ThemeProvider attribute="class">
-  {children}
-</ThemeProvider>
+<ThemeProvider attribute="class">{children}</ThemeProvider>
 ```
 
 Then use dark variants:
 
 ```tsx
-<h1 className="text-black dark:text-white">
-  Hello World
-</h1>
+<h1 className="text-black dark:text-white">Hello World</h1>
 ```
 
 ## This project is deployed on Netlify
