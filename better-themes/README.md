@@ -10,7 +10,7 @@ A theme provider for React
 
 - **Zero flash on load** - Prevents theme flash during page load (SSR/SSG safe)
 - **System preference detection** - Automatically detects and respects user's system theme preference via `prefers-color-scheme`
-- **Cross-tab synchronization** - Theme changes sync across browser tabs and windows
+- **Storage support** - Supports both `localStorage` (syncs across tabs) and `sessionStorage` (tab isolation)
 - **Themed browser UI** - Sets `color-scheme` CSS property for native browser UI elements
 - **Custom themes** - Support for multiple custom themes beyond light/dark
 - **Flexible styling** - Use class or data attributes (works with Tailwind CSS)
