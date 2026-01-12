@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter better-themes build && pnpm --filter vite build"
+  command = "pnpm --filter better-themes build && pnpm --filter example-vite build"
   publish = "examples/vite/dist"
 
 # SPA routing - redirect all requests to index.html for client-side routing

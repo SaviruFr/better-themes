@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter better-themes build && pnpm --filter next-app build"
+  command = "pnpm --filter better-themes build && pnpm --filter example-next-app build"
   publish = "examples/next-app/.next"
 
 [[plugins]]

@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter better-themes build && pnpm --filter waku build"
+  command = "pnpm --filter better-themes build && pnpm --filter example-waku build"
   publish = "examples/waku/dist/public"
 [functions]
   included_files = ["examples/waku/private/**"]

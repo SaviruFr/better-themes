@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter better-themes build && pnpm --filter fumadocs build"
+  command = "pnpm --filter better-themes build && pnpm --filter example-fumadocs build"
   publish = "examples/fumadocs/.next"
 
 [[plugins]]

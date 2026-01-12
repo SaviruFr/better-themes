@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter better-themes build && pnpm --filter next-pages build"
+  command = "pnpm --filter better-themes build && pnpm --filter example-next-pages build"
   publish = "examples/next-pages/.next"
 
 [[plugins]]
