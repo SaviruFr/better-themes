@@ -3,7 +3,7 @@
 	"author": "SaviruFr",
 	"homepage": "https://better-themes.netlify.app",
 	"license": "MIT",
-	"packageManager": "pnpm@10.28.0",
+	"packageManager": "pnpm@10.28.1",
 	"scripts": {
 		"build": "turbo run build",
 		"build:package": "pnpm --filter 'better-themes' build",
