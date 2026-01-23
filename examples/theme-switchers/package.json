@@ -14,13 +14,13 @@
 		"better-themes": "workspace:*",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"lucide-react": "^0.456.0",
+		"lucide-react": "^0.563.0",
 		"react": "^19.2.3",
 		"react-dom": "^19.2.3",
-		"tailwind-merge": "^2.6.0"
+		"tailwind-merge": "^3.4.0"
 	},
 	"devDependencies": {
-		"@types/react": "^19.2.8",
+		"@types/react": "^19.2.9",
 		"@types/react-dom": "^19.2.3",
 		"typescript": "^5.9.3"
 	}

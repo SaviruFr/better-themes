@@ -59,6 +59,12 @@ export const metadata: Metadata = {
 export default function Layout({ children }: LayoutProps<"/">) {
 	return (
 		<html lang="en" className={inter.className} suppressHydrationWarning>
+			<head>
+				<meta
+					name="google-site-verification"
+					content="JQHuDbJPOQlddiG-01vZE5cQ8NOY4r3_3sXjFzHarCI"
+				/>
+			</head>
 			<body className="flex flex-col min-h-screen">
 				<Provider>{children}</Provider>
 			</body>
