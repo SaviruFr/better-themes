@@ -22,7 +22,7 @@
     "fumadocs-mdx": "14.2.6",
     "fumadocs-twoslash": "^3.1.14",
     "fumadocs-ui": "16.5.0",
-    "lucide-react": "^0.563.0",
+    "lucide-react": "^1.0.0",
     "next": "16.2.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
