@@ -2,3 +2,7 @@ packages:
   - better-themes
   - web
   - examples/*
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  sharp: false
