@@ -23,7 +23,7 @@
 		"ci": "pnpm lint && pnpm format:check && pnpm build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.15",
+		"@biomejs/biome": "2.5.3",
 		"@changesets/changelog-github": "^0.7.0",
 		"@changesets/cli": "^2.31.0",
 		"turbo": "^2.9.12"
