@@ -1,8 +1,8 @@
 packages:
-  - better-themes
-  - web
-  - examples/*
+    - better-themes
+    - web
+    - examples/*
 allowBuilds:
-  '@parcel/watcher': false
-  esbuild: false
-  sharp: false
+    "@parcel/watcher": false
+    esbuild: false
+    sharp: false
