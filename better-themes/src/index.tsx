@@ -245,6 +245,10 @@ const ThemeScript = memo(
 		themes,
 		nonce,
 	}: Omit<ThemeProviderProps, "children"> & { defaultTheme: string }) => {
+		if (!isServer) {
+			return null;
+		}
+
 		const scriptArgs = JSON.stringify([
 			attribute,
 			storage,
